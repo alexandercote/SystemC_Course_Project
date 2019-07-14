@@ -368,18 +368,11 @@ NN_DIGIT c
     hw_mult_enable.write(true);
 	
 	while(hw_mult_done.read() = false){}; // loop until hardware is complete
-    //wait(10, SC_NS);		// communication delay (10 ns)
-        
-//  computation is now performed in hardware, taking 100 ns...
 
-   // wait(100, SC_NS);		// hardware multiplication delay (100 ns)
-   // wait(10, SC_NS);		// communication delay (10 ns)
-    
     a[0] = in_data_low.read();
     a[1] = in_data_high.read();
   
     hw_mult_enable.write(false);
-   // wait(10, SC_NS);		// communication delay (10 ns)
    
 }
 
