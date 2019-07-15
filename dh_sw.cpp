@@ -363,7 +363,8 @@ NN_DIGIT b,
 NN_DIGIT c
 )
 {
-    cout << "NN_DigitMult: Entering NN_DigitMult" << endl;
+    //cout << "NN_DigitMult: Entering NN_DigitMult" << endl;
+    //cout << "NN_DigitMult: Data: b = " << b << ", c = " << c << endl;
     out_data_1.write(b);
     out_data_2.write(c);  
     hw_mult_enable.write(true);
@@ -374,17 +375,19 @@ NN_DIGIT c
     {
         if (hw_mult_done.read() == true)
 	{
-	   cout << "NN_DigitMult: hw_mult_done = " << hw_mult_done << endl;
+	   //cout << "NN_DigitMult: hw_mult_done = " << hw_mult_done << endl;
 	   break;
 	}
+	wait();
     }; // loop until hardware is complete
 
     //cout << "NN_DigitMult: Hardware complete" << endl;
 
     a[0] = in_data_low.read();
     a[1] = in_data_high.read();
-    cout << "NN_DigitMult: Data: A0 = " << a[0] << ", A1 = " << a[1] << endl;
+    //cout << "NN_DigitMult: Data: A0 = " << a[0] << ", A1 = " << a[1] << endl;
     hw_mult_enable.write(false);
+    wait();
     //cout << "Exiting NN_DigitMult" << endl;
 }
 

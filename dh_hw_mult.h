@@ -40,7 +40,7 @@ SC_MODULE (dh_hw_mult)
 			switch(state)
 			{
 				case WAIT_STATE:
-					cout << "process_hw_mult: WAIT_STATE" << endl;
+					//cout << "process_hw_mult: WAIT_STATE" << endl;
 					if(hw_mult_enable.read() == true)
 					{
 						state = EXECUTE_STATE;
@@ -50,7 +50,7 @@ SC_MODULE (dh_hw_mult)
 					
 					
 				case EXECUTE_STATE:
-				        cout << "process_hw_mult: EXECUTE_STATE" << endl;
+				        //cout << "process_hw_mult: EXECUTE_STATE" << endl;
 					// Read inputs	
 					b = in_data_1.read();
 					c = in_data_2.read();
@@ -77,7 +77,7 @@ SC_MODULE (dh_hw_mult)
 					
 					
 				case OUTPUT_STATE:
-				        cout << "process_hw_mult: OUTPUT_STATE" << endl;
+				        //cout << "process_hw_mult: OUTPUT_STATE" << endl;
 					// Write outputs
 					out_data_low.write(a[0]);
 					out_data_high.write(a[1]);
@@ -88,7 +88,7 @@ SC_MODULE (dh_hw_mult)
 					
 					
 				case FINISH_STATE:
-				        cout << "process_hw_mult: FINISH_STATE" << endl;
+				        //cout << "process_hw_mult: FINISH_STATE" << endl;
 					if(hw_mult_enable.read() == false)
 					{
 						hw_mult_done.write(false);
