@@ -7,6 +7,7 @@
 
 #include "systemc.h"
 #include "dh_sw.h"
+#include <iostream>
 
 
 static unsigned char PADDING[64] = {
@@ -362,18 +363,29 @@ NN_DIGIT b,
 NN_DIGIT c
 )
 {
-
+    cout << "NN_DigitMult: Entering NN_DigitMult" << endl;
     out_data_1.write(b);
     out_data_2.write(c);  
     hw_mult_enable.write(true);
-	
-	while(hw_mult_done.read() = false){}; // loop until hardware is complete
+    
+    //cout << "NN_DigitMult: Sent Data to Hardware" << endl;
+
+    while(true)
+    {
+        if (hw_mult_done.read() == true)
+	{
+	   cout << "NN_DigitMult: hw_mult_done = " << hw_mult_done << endl;
+	   break;
+	}
+    }; // loop until hardware is complete
+
+    //cout << "NN_DigitMult: Hardware complete" << endl;
 
     a[0] = in_data_low.read();
     a[1] = in_data_high.read();
-  
+    cout << "NN_DigitMult: Data: A0 = " << a[0] << ", A1 = " << a[1] << endl;
     hw_mult_enable.write(false);
-   
+    //cout << "Exiting NN_DigitMult" << endl;
 }
 
 

@@ -2,6 +2,7 @@
 #include "digit.h"
 #include "dh_hw_mult.h"
 
+/*
 void dh_hw_mult::process_hw_mult()
 {
 	
@@ -49,3 +50,4 @@ void dh_hw_mult::process_hw_mult()
 	  	  
 }
 
+*/
