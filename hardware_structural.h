@@ -48,37 +48,55 @@ SC_MODULE(async_reg)
 };
 
 
-SC_MODULE(two_input_adder)
+SC_MODULE(two_in_adder)
 {
     sc_in  <NN_DIGIT> input1, input2;
-    sc_out <NN_DIGIT> outputval;
+    sc_out <NN_DIGIT> output;
 
-    void float_add()
+    void add()
     {
-        outputval.write( input1.read() + input2.read() );
+        output.write( input1.read() + input2.read() );
     }
 
-    SC_CTOR (two_input_adder)
+    SC_CTOR (two_in_adder)
     {
-        SC_METHOD(float_add);
+        SC_METHOD(add);
+        sensitive << input1 << input2;
+    }
+
+};
+
+SC_MODULE(two_in_multiplier)
+{
+    sc_in  <NN_DIGIT> input1, input2;
+    sc_out <NN_DIGIT> output;
+
+    void multiply()
+    {
+        output.write( input1.read() * input2.read() );
+    }
+
+    SC_CTOR (two_in_multiplier)
+    {
+        SC_METHOD(multiply);
         sensitive << input1 << input2;
     }
 
 };
 
 
-SC_MODULE(two_input_multiplexer)
+SC_MODULE(two_in_multiplexer)
 {
     sc_in  <NN_DIGIT> input1, input2;
 	sc_in  <bool>     control;
-    sc_out <NN_DIGIT> outputval;
+    sc_out <NN_DIGIT> output;
 
     void float_add()
     {
-        outputval.write( (input1.read() & control.read()) | (input2.read() & ~control.read()) );
+        output.write( (input1.read() & control.read()) | (input2.read() & ~control.read()) );
     }
 
-    SC_CTOR (two_input_multiplexer)
+    SC_CTOR (two_in_multiplexer)
     {
         SC_METHOD(float_add);
         sensitive << input1 << input2 << control;
@@ -87,19 +105,19 @@ SC_MODULE(two_input_multiplexer)
 };
 
 
-SC_MODULE(comparator)
+SC_MODULE(LT_comparator)
 {
 	sc_in  <NN_DIGIT> input1, input2;
-	sc_out <bool> LT, EQ, GT;
+	sc_out <bool> LT; //, EQ, GT;
 	
 	void compare()
 	{
 		LT.write(false);
-		EQ.write(false);
-		GT.write(false);
+		//EQ.write(false);
+		//GT.write(false);
 		
-		if (input1.read() == input2.read()) EQ.write(true);
-		if (input1.read() >  input2.read()) GT.write(true);
+		//if (input1.read() == input2.read()) EQ.write(true);
+		//if (input1.read() >  input2.read()) GT.write(true);
 		if (input1.read() <  input2.read()) LT.write(true);
 	}
 	
