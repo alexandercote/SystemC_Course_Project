@@ -1,16 +1,16 @@
-
 #include "systemc.h"
+#include "digit.h"
 
 // Used to seperate inputs B and C into their high and low parts.
 SC_MODULE(splitter_32bit)
 {
     sc_in  <NN_DIGIT>      input;
-    sc_out <NN_HALF_DIGIT> highoutput, lowoutput;
+    sc_out <NN_DIGIT>      highoutput, lowoutput;
 
     void split()
     {
-		highout.write(input.read() & MAX_NN_HALF_DIGIT);
-		lowout.write((input.read() >> NN_HALF_DIGIT_BITS) & MAX_NN_HALF_DIGIT);
+		highoutput.write(input.read() & MAX_NN_HALF_DIGIT);
+		lowoutput.write((input.read() >> NN_HALF_DIGIT_BITS) & MAX_NN_HALF_DIGIT);
     }
 
     SC_CTOR (splitter_32bit)
@@ -66,6 +66,7 @@ SC_MODULE(two_in_adder)
 
 };
 
+
 SC_MODULE(two_in_multiplier)
 {
     sc_in  <NN_DIGIT> input1, input2;
@@ -88,17 +89,17 @@ SC_MODULE(two_in_multiplier)
 SC_MODULE(two_in_multiplexer)
 {
     sc_in  <NN_DIGIT> input1, input2;
-	sc_in  <bool>     control;
+    sc_in  <bool>     control;
     sc_out <NN_DIGIT> output;
 
-    void float_add()
+    void multiplex()
     {
         output.write( (input1.read() & control.read()) | (input2.read() & ~control.read()) );
     }
 
     SC_CTOR (two_in_multiplexer)
     {
-        SC_METHOD(float_add);
+        SC_METHOD(multiplex);
         sensitive << input1 << input2 << control;
     }
 
@@ -121,11 +122,11 @@ SC_MODULE(LT_comparator)
 		if (input1.read() <  input2.read()) LT.write(true);
 	}
 	
-	SC_CTOR (comparator)
-    {
-        SC_METHOD(compare);
-        sensitive << input1 << input2;
-    }
+	SC_CTOR (LT_comparator)
+	{
+		SC_METHOD(compare);
+		sensitive << input1 << input2;
+	}
 };
 
 
@@ -139,7 +140,7 @@ SC_MODULE(highhalf)
 		output.write(input.read() >> 16);
 	}
 	
-	SC_CTOR (highhalf)
+    SC_CTOR (highhalf)
     {
         SC_METHOD(gethighhalf);
         sensitive << input;
@@ -153,14 +154,14 @@ SC_MODULE(tohighhalf)
 	sc_in  <NN_DIGIT> input;
 	sc_out <NN_DIGIT> output;
 	
-	void tohighhalf()
+	void tohighhalf_func()
 	{
 		output.write(input.read() << 16);
 	}
 	
 	SC_CTOR (tohighhalf)
     {
-        SC_METHOD(tohighhalf);
+        SC_METHOD(tohighhalf_func);
         sensitive << input;
     }
 	
