@@ -44,6 +44,11 @@ SC_MODULE (dh_hw_mult)
 	sc_signal <bool> a1_register_load;
 	sc_signal <bool> a1_out_register_load;
 	
+	sc_signal <bool> a0_multiplexer_cont; 
+	sc_signal <bool> a1_multiplexer_cont; 
+	sc_signal <bool> t_multiplexer_cont; 
+	sc_signal <bool> u_multiplexer_cont; 
+	
 	sc_signal <bool> LT_if_1;
 	sc_signal <bool> LT_if_2;
 	
@@ -132,7 +137,21 @@ SC_MODULE (dh_hw_mult)
 	    // Set constants
 	    offset_if_1.write(0b000100000000);
 	    offset_if_2.write(0b000000000001);
-	    
+		
+		// initialize variables
+		b_register_load.write(false);
+		c_register_load.write(false);
+		t_register_load.write(false);
+		u_register_load.write(false);
+		a0_register_load.write(false);
+		a1_register_load.write(false);
+		a1_out_register_load.write(false);
+		
+		a0_multiplexer_cont.write(false);
+		a1_multiplexer_cont.write(false); 
+		t_multiplexer_cont.write(false); 
+		u_multiplexer_cont.write(false); 
+
 	    
 	    // T offsets
 	    t_highhalf_module.input(t_register_out);    t_highhalf_module.output(t_left_shifted);
@@ -158,12 +177,12 @@ SC_MODULE (dh_hw_mult)
 	    u_multiplier.input1(bsplitter_bhigh);   u_multiplier.input2(csplitter_clow);    u_multiplier.output(u_multiplier_out);
 	    
 	    // Multiplexers
-	    a0_multiplexer.input1(a0_u_adder_out);              a0_multiplexer.input2(a0_multiplier_out);           a0_multiplexer.output(a0_register_in);
-	    a1_multiplexer.input1(a1_if_multiplexer_out);       a1_multiplexer.input2(a1_multiplier_out);           a1_multiplexer.output(a1_register_in);
-	    t_multiplexer.input1(t_u_adder_out);                t_multiplexer.input2(t_multiplier_out);             t_multiplexer.output(t_register_in);
-	    u_multiplexer.input1(t_left_shifted);               u_multiplexer.input2(u_multiplier_out);             u_multiplexer.output(u_register_in);
-	    a1_if_multiplexer.input1(a1_register_out);          a1_if_multiplexer.input2(a1_offset_adder_out);      a1_if_multiplexer.output(a1_if_multiplexer_out);
-	    a1_out_multiplexer.input1(a1_offset_2_adder_out);   a1_out_multiplexer.input2(a1_if_multiplexer_out);   a1_out_multiplexer.output(a1_out_multiplexer_out);
+	    a0_multiplexer.input1(a0_u_adder_out);              a0_multiplexer.input2(a0_multiplier_out);                 a0_multiplexer.control(a0_multiplexer_cont);                      a0_multiplexer.output(a0_register_in);
+	    a1_multiplexer.input1(a1_if_multiplexer_out);       a1_multiplexer.input2(a1_multiplier_out);                 a1_multiplexer.control(a1_multiplexer_cont);                      a1_multiplexer.output(a1_register_in);
+	    t_multiplexer.input1(t_u_adder_out);                t_multiplexer.input2(t_multiplier_out);                   t_multiplexer.control(t_multiplexer_cont);                        t_multiplexer.output(t_register_in);
+	    u_multiplexer.input1(t_left_shifted);               u_multiplexer.input2(u_multiplier_out);                   u_multiplexer.control(u_multiplexer_cont);                        u_multiplexer.output(u_register_in);
+	    a1_if_multiplexer.input1(a1_register_out);          a1_if_multiplexer.input2(a1_offset_adder_out);            a1_if_multiplexer.control(LT_if_1);                               a1_if_multiplexer.output(a1_if_multiplexer_out);
+	    a1_out_multiplexer.input1(a1_offset_2_adder_out);   a1_out_multiplexer.input2(a1_if_multiplexer_out);         a1_out_multiplexer.control(LT_if_2);                              a1_out_multiplexer.output(a1_out_multiplexer_out);
 	
 	    // Adders
 	    t_u_adder.input1(u_register_out);              t_u_adder.input2(t_register_out);                   t_u_adder.output(t_u_adder_out);        

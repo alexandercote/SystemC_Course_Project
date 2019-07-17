@@ -50,27 +50,40 @@ SC_MODULE (dh_hw_mult)
 					
 					
 				case EXECUTE_STATE:
-				        //cout << "process_hw_mult: EXECUTE_STATE" << endl;
+				    cout << "process_hw_mult: EXECUTE_STATE" << endl;
 					// Read inputs	
 					b = in_data_1.read();
 					c = in_data_2.read();
-					
+					cout << "Data: b = " << b << ", c = " << c << endl;
 					// Original code from NN_DigitMult()...		
 					bHigh = (NN_HALF_DIGIT)HIGH_HALF (b);
 					bLow = (NN_HALF_DIGIT)LOW_HALF (b);
 					cHigh = (NN_HALF_DIGIT)HIGH_HALF (c);
 					cLow = (NN_HALF_DIGIT)LOW_HALF (c);
+					cout << " bHigh = " << bHigh << ", bLow = " << bLow << endl;
+					cout << " cHigh = " << cHigh << ", cLow = " << cLow << endl;
 
 					a[0] = (NN_DIGIT)bLow * (NN_DIGIT)cLow;
 					t = (NN_DIGIT)bLow * (NN_DIGIT)cHigh;
 					u = (NN_DIGIT)bHigh * (NN_DIGIT)cLow;
 					a[1] = (NN_DIGIT)bHigh * (NN_DIGIT)cHigh;
-				  
+					
+					cout << " a[0] = " << a[0] << ", a[1] = " << a[1] << endl;
+					cout << " t = " << t << ", u = " << u << endl;
+					
 					if ((t += u) < u) a[1] += TO_HIGH_HALF (1);
 					u = TO_HIGH_HALF (t);
+					
+					cout << "After if_1" << endl;
+					cout << " a[0] = " << a[0] << ", a[1] = " << a[1] << endl;
+					cout << " t = " << t << ", u = " << u << endl;
 				  
 					if ((a[0] += u) < u) a[1]++;
 					a[1] += HIGH_HALF (t);
+					
+					cout << "After if_2" << endl;
+					cout << " a[0] = " << a[0] << ", a[1] = " << a[1] << endl;
+					cout << " t = " << t << ", u = " << u << endl;
 					
 					state = OUTPUT_STATE;
 					break;

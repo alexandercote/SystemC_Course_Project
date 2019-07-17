@@ -19,70 +19,14 @@ void dh_hw_mult::process_hw_mult()
 					//cout << "process_hw_mult: WAIT_STATE" << endl;
 					if(hw_mult_enable.read() == true)
 					{
-						state = ES_MULT_LOAD;
-						b_register_load.write(true);
-						c_register_load.write(true);
+						state = EXECUTE_STATE;
 					}
 					//wait(); // Figure out where to put this....
 					break;
 					
-				case ES_MULT_LOAD:
-					// Ignore the input
-					b_register_load.write(false);
-					c_register_load.write(false);
 					
-					// Load in the new multiplication data.
-					t_register_load.write(true);
-					u_register_load.write(true);
-					a0_register_load.write(true);
-					a1_register_load.write(true);
-					state = ES_DEASSERT_1;
-					
-					// Would need to ensure multiplexer control signals are false here, 
-					// but they are initialized as so, so no need to do it again.
-					break;
-				
-				case ES_DEASSERT_1:
-					// Deassert Reg Values
-					t_register_load.write(false);
-					u_register_load.write(false);
-					a0_register_load.write(false);
-					a1_register_load.write(false);
-					state = ES_PROCESS_IF_1;
-					break;
-				
-				case ES_PROCESS_IF_1:
-					t_register_load.write(true);
-					u_register_load.write(true);
-					a0_register_load.write(true);
-					a1_register_load.write(true);
-					
-					a1_multiplexer_cont.write(true);
-					t_multiplexer_cont.write(true); 
-					u_multiplexer_cont.write(true);
-					state = ES_DEASSERT_2;
-					break;
-					
-				case ES_DEASSERT_2:
-					// Deassert Reg Values
-					t_register_load.write(false);
-					u_register_load.write(false);
-					a0_register_load.write(false);
-					a1_register_load.write(false);
-					state = ES_PROCESS_IF_2;
-					break;
-				
-				case ES_PROCESS_IF_2:
-					a0_register_load.write(true);
-					a1_out_register_load.write(true);
-				
-					a0_multiplexer_cont.write(true);
-					state = OUTPUT_STATE;
-					break;
-				
-				/*
 				case EXECUTE_STATE:
-				    //cout << "process_hw_mult: EXECUTE_STATE" << endl;
+				        //cout << "process_hw_mult: EXECUTE_STATE" << endl;
 					// Read inputs	
 					b = in_data_1.read();
 					c = in_data_2.read();
@@ -106,13 +50,13 @@ void dh_hw_mult::process_hw_mult()
 					
 					state = OUTPUT_STATE;
 					break;
-				*/	
+					
 					
 				case OUTPUT_STATE:
 				        //cout << "process_hw_mult: OUTPUT_STATE" << endl;
 					// Write outputs
-					out_data_low.write(a0_register_out);
-					out_data_high.write(a1_out_register_out);
+					out_data_low.write(a[0]);
+					out_data_high.write(a[1]);
 					
 					hw_mult_done.write(true); // assert multiplication is done
 					state = FINISH_STATE;
