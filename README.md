@@ -59,3 +59,21 @@ FSM into two communicating state machines.)
 Your final design should produce the same output as the original code.
 Beware that simulations will slow down as you refine your design.
 
+
+## Test Data Results
+
+The first iteration of NN_DigitMult running without the hardware implementation generates the following data:
+	Data: b = 1, c = 2147483648
+	 bHigh = 0, bLow = 1
+	 cHigh = 32768, cLow = 0
+	 a[0] = 0, a[1] = 0
+	 t = 32768, u = 0
+	After if_1
+	 a[0] = 0, a[1] = 0
+	 t = 32768, u = 2147483648
+	After if_2
+	 a[0] = 2147483648, a[1] = 0
+	 t = 32768, u = 2147483648
+
+
+

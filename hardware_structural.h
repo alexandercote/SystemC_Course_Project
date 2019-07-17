@@ -9,8 +9,8 @@ SC_MODULE(splitter_32bit)
 
     void split()
     {
-		highoutput.write(input.read() & MAX_NN_HALF_DIGIT);
-		lowoutput.write((input.read() >> NN_HALF_DIGIT_BITS) & MAX_NN_HALF_DIGIT);
+		lowoutput.write(input.read() & MAX_NN_HALF_DIGIT);
+		highoutput.write((input.read() >> NN_HALF_DIGIT_BITS) & MAX_NN_HALF_DIGIT);
     }
 
     SC_CTOR (splitter_32bit)
@@ -94,7 +94,15 @@ SC_MODULE(two_in_multiplexer)
 
     void multiplex()
     {
-        output.write( (input1.read() & control.read()) | (input2.read() & ~control.read()) );
+        //output.write( (input1.read() & control.read()) | (input2.read() & ~control.read()) );
+	if(control.read() == true)
+	{
+	  output.write(input1.read());
+	}
+	else 
+	{
+	  output.write(input2.read());
+	}
     }
 
     SC_CTOR (two_in_multiplexer)
@@ -114,11 +122,6 @@ SC_MODULE(LT_comparator)
 	void compare()
 	{
 		LT.write(false);
-		//EQ.write(false);
-		//GT.write(false);
-		
-		//if (input1.read() == input2.read()) EQ.write(true);
-		//if (input1.read() >  input2.read()) GT.write(true);
 		if (input1.read() <  input2.read()) LT.write(true);
 	}
 	
@@ -137,7 +140,7 @@ SC_MODULE(highhalf)
 	
 	void gethighhalf()
 	{
-		output.write(input.read() >> 16);
+		output.write(input.read() << 16);
 	}
 	
     SC_CTOR (highhalf)
@@ -156,7 +159,7 @@ SC_MODULE(tohighhalf)
 	
 	void tohighhalf_func()
 	{
-		output.write(input.read() << 16);
+		output.write((input.read() >> 16) & 0xFFFF);
 	}
 	
 	SC_CTOR (tohighhalf)
