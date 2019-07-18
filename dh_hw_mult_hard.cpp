@@ -66,10 +66,14 @@ void dh_hw_mult::process_hw_mult()
 					cout << " bHigh = " << bsplitter_bhigh << ", bLow = " << bsplitter_blow << endl;
 					cout << " cHigh = " << csplitter_chigh << ", cLow = " << csplitter_clow << endl;
 					// Deassert Reg Values
-					t_register_load.write(false);
+					//t_register_load.write(false);
 					u_register_load.write(false);
 					a0_register_load.write(false);
 					a1_register_load.write(false);
+					
+					a1_multiplexer_cont.write(true);
+					t_multiplexer_cont.write(true); 
+					u_multiplexer_cont.write(true);
 					state = ES_PROCESS_IF_1;
 					break;
 				
@@ -77,14 +81,15 @@ void dh_hw_mult::process_hw_mult()
 					cout << "process_hw_mult: ES_PROCESS_IF_1" << endl;
 					cout << " a[0] = " << a0_register_out << ", a[1] = " << a1_register_out << endl;
 					cout << " t = " << t_register_out << ", u = " << u_register_out << endl;
-					t_register_load.write(true);
+					t_register_load.write(false);
+					//t_register_load.write(true);
 					u_register_load.write(true);
-					a0_register_load.write(true);
+					//a0_register_load.write(true);
 					a1_register_load.write(true);
 					
-					a1_multiplexer_cont.write(true);
-					t_multiplexer_cont.write(true); 
-					u_multiplexer_cont.write(true);
+					//a1_multiplexer_cont.write(true);
+					//t_multiplexer_cont.write(true); 
+					//u_multiplexer_cont.write(true);
 					state = ES_DEASSERT_2;
 					break;
 					
@@ -95,10 +100,12 @@ void dh_hw_mult::process_hw_mult()
 					cout << " t = " << t_register_out << ", u = " << u_register_out << endl;
 					//cout << "U_in1 = " << t_got_highhalf << ", U_in2 = " << u_multiplier_out << ", u_cont = " << u_multiplexer_cont << endl; 
 					// Deassert Reg Values
-					t_register_load.write(false);
+					//t_register_load.write(false);
 					u_register_load.write(false);
-					a0_register_load.write(false);
+					//a0_register_load.write(false);
 					a1_register_load.write(false);
+					
+					a0_register_load.write(true);
 					state = ES_PROCESS_IF_2;
 					break;
 				
@@ -106,7 +113,7 @@ void dh_hw_mult::process_hw_mult()
 					cout << "process_hw_mult: ES_PROCESS_IF_2" << endl;
 					cout << " a[0] = " << a0_register_out << ", a[1] = " << a1_register_out << endl;
 					cout << " t = " << t_register_out << ", u = " << u_register_out << endl;
-					a0_register_load.write(true);
+					a0_register_load.write(false);
 					a1_out_register_load.write(true);
 				
 					a0_multiplexer_cont.write(true);
