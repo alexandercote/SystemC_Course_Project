@@ -8,12 +8,12 @@
 
 
 #define WAIT_STATE      0
-#define EXECUTE_STATE   1
-#define ES_MULT_LOAD    2
-#define ES_DEASSERT_1   3
-#define ES_PROCESS_IF_1 4
-#define ES_DEASSERT_2   5
-#define ES_PROCESS_IF_2 6
+#define ES_STAGE_1      1
+#define ES_STAGE_2      2
+#define ES_STAGE_3      3
+#define ES_STAGE_4      4
+#define ES_STAGE_5      5
+#define ES_STAGE_6      6
 #define OUTPUT_STATE    7
 #define FINISH_STATE    8
 
@@ -96,8 +96,8 @@ SC_MODULE (dh_hw_mult)
 	sc_signal <NN_DIGIT> offset_if_2;
 	
 	// T shifts
-	sc_signal <NN_DIGIT> t_got_highhalf;
-	sc_signal <NN_DIGIT> t_highhalfed;
+	sc_signal <NN_DIGIT> t_to_highhalf;
+	sc_signal <NN_DIGIT> t_highhalf_part;
 	
 	
 	
@@ -135,8 +135,8 @@ SC_MODULE (dh_hw_mult)
 	    state = WAIT_STATE;
 	    
 	    // Set constants
-	    offset_if_1.write(0b000100000000);
-	    offset_if_2.write(0b000000000001);
+	    offset_if_1.write(65536); // (1 << 16)
+	    offset_if_2.write(1);
 		
 		// initialize variables
 		b_register_load.write(false);
@@ -154,8 +154,8 @@ SC_MODULE (dh_hw_mult)
 
 	    
 	    // T offsets
-	    t_highhalf_module.input(t_register_out);    t_highhalf_module.output(t_got_highhalf);
-	    t_tohighhalf_module.input(t_register_out);    t_tohighhalf_module.output(t_highhalfed);
+	    t_highhalf_module.input(t_register_out);    t_highhalf_module.output(t_highhalf_part);
+	    t_tohighhalf_module.input(t_register_out);    t_tohighhalf_module.output(t_to_highhalf);
 	    
 	    // Registers
 	    b_register.clock(hw_clock);        b_register.input(in_data_1);                 b_register.load(b_register_load);              b_register.output(breg_to_bsplitter);
@@ -180,8 +180,8 @@ SC_MODULE (dh_hw_mult)
 	    a0_multiplexer.input1(a0_u_adder_out);              a0_multiplexer.input2(a0_multiplier_out);                 a0_multiplexer.control(a0_multiplexer_cont);                      a0_multiplexer.output(a0_register_in);
 	    a1_multiplexer.input1(a1_if_multiplexer_out);       a1_multiplexer.input2(a1_multiplier_out);                 a1_multiplexer.control(a1_multiplexer_cont);                      a1_multiplexer.output(a1_register_in);
 	    t_multiplexer.input1(t_u_adder_out);                t_multiplexer.input2(t_multiplier_out);                   t_multiplexer.control(t_multiplexer_cont);                        t_multiplexer.output(t_register_in);
-	    u_multiplexer.input1(t_got_highhalf);               u_multiplexer.input2(u_multiplier_out);                   u_multiplexer.control(u_multiplexer_cont);                        u_multiplexer.output(u_register_in);
-	    a1_if_multiplexer.input1(a1_register_out);          a1_if_multiplexer.input2(a1_offset_adder_out);            a1_if_multiplexer.control(LT_if_1);                               a1_if_multiplexer.output(a1_if_multiplexer_out);
+	    u_multiplexer.input1(t_to_highhalf);                u_multiplexer.input2(u_multiplier_out);                   u_multiplexer.control(u_multiplexer_cont);                        u_multiplexer.output(u_register_in);
+	    a1_if_multiplexer.input1(a1_offset_adder_out);      a1_if_multiplexer.input2(a1_register_out);                a1_if_multiplexer.control(LT_if_1);                               a1_if_multiplexer.output(a1_if_multiplexer_out);
 	    a1_out_multiplexer.input1(a1_offset_2_adder_out);   a1_out_multiplexer.input2(a1_if_multiplexer_out);         a1_out_multiplexer.control(LT_if_2);                              a1_out_multiplexer.output(a1_out_multiplexer_out);
 	
 	    // Adders
@@ -189,7 +189,7 @@ SC_MODULE (dh_hw_mult)
 	    a1_offset_adder.input1(a1_register_out);       a1_offset_adder.input2(offset_if_1);                a1_offset_adder.output(a1_offset_adder_out);
 	    a0_u_adder.input1(a0_register_out);            a0_u_adder.input2(u_register_out);                  a0_u_adder.output(a0_u_adder_out);
 	    a1_offset_2_adder.input1(offset_if_2);         a1_offset_2_adder.input2(a1_if_multiplexer_out);    a1_offset_2_adder.output(a1_offset_2_adder_out);                     // From the if mux
-	    a1_hht_adder.input1(a1_out_multiplexer_out);   a1_hht_adder.input2(t_highhalfed);                  a1_hht_adder.output(a1_out_register_in);                        // Not actually t, but highhalf t
+	    a1_hht_adder.input1(a1_out_multiplexer_out);   a1_hht_adder.input2(t_highhalf_part);               a1_hht_adder.output(a1_out_register_in);                        // Not actually t, but highhalf t
 	
 	    // Comparators
 	    comparator_if_1.input1(t_u_adder_out);    comparator_if_1.input2(u_register_out);   comparator_if_1.LT(LT_if_1);

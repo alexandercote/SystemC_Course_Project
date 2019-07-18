@@ -385,7 +385,7 @@ NN_DIGIT c
 
     a[0] = in_data_low.read();
     a[1] = in_data_high.read();
-    //cout << "NN_DigitMult: Data: A0 = " << a[0] << ", A1 = " << a[1] << endl;
+    cout << "NN_DigitMult: Data: A0 = " << a[0] << ", A1 = " << a[1] << endl;
     hw_mult_enable.write(false);
     wait();
     //cout << "Exiting NN_DigitMult" << endl;

@@ -121,8 +121,15 @@ SC_MODULE(LT_comparator)
 	
 	void compare()
 	{
-		LT.write(false);
-		if (input1.read() <  input2.read()) LT.write(true);
+		//LT.write(false);
+		if (input1.read() <  input2.read()) 
+		{
+		  LT.write(true);
+		}
+		else
+		{
+		  LT.write(false);
+		}
 	}
 	
 	SC_CTOR (LT_comparator)
@@ -133,25 +140,6 @@ SC_MODULE(LT_comparator)
 };
 
 
-SC_MODULE(highhalf)
-{
-	sc_in  <NN_DIGIT> input;
-	sc_out <NN_DIGIT> output;
-	
-	void gethighhalf()
-	{
-		output.write(input.read() << 16);
-	}
-	
-    SC_CTOR (highhalf)
-    {
-        SC_METHOD(gethighhalf);
-        sensitive << input;
-    }
-	
-};
-
-
 SC_MODULE(tohighhalf)
 {
 	sc_in  <NN_DIGIT> input;
@@ -159,12 +147,31 @@ SC_MODULE(tohighhalf)
 	
 	void tohighhalf_func()
 	{
+		output.write(input.read() << 16);
+	}
+	
+    SC_CTOR (tohighhalf)
+    {
+        SC_METHOD(tohighhalf_func);
+        sensitive << input;
+    }
+	
+};
+
+
+SC_MODULE(highhalf)
+{
+	sc_in  <NN_DIGIT> input;
+	sc_out <NN_DIGIT> output;
+	
+	void highhalf_func()
+	{
 		output.write((input.read() >> 16) & 0xFFFF);
 	}
 	
-	SC_CTOR (tohighhalf)
+	SC_CTOR (highhalf)
     {
-        SC_METHOD(tohighhalf_func);
+        SC_METHOD(highhalf_func);
         sensitive << input;
     }
 	
