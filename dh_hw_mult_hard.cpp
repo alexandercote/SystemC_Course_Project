@@ -91,6 +91,8 @@ void dh_hw_mult::process_hw_mult()
 	
 					u_register_load.write(true);
 					a1_register_load.write(true);
+					
+					a0_multiplexer_cont.write(true);
 
 					state = ES_STAGE_4;
 					
@@ -107,8 +109,6 @@ void dh_hw_mult::process_hw_mult()
 					a1_register_load.write(false);
 					a0_register_load.write(true);
 					
-					a0_multiplexer_cont.write(true);
-					
 					state = ES_STAGE_5;
 					
 					break;
@@ -120,8 +120,8 @@ void dh_hw_mult::process_hw_mult()
 					
 					a0_register_load.write(false);
 					a1_out_register_load.write(true);
-					wait();
-					a1_out_register_load.write(false);
+					//wait();
+					//a1_out_register_load.write(false);
 				
 					state = OUTPUT_STATE;
 					break;
@@ -129,7 +129,7 @@ void dh_hw_mult::process_hw_mult()
 				case OUTPUT_STATE:
 				        cout << "process_hw_mult: OUTPUT_STATE" << endl;
 					//a0_register_load.write(false);
-					//a1_out_register_load.write(false);
+					a1_out_register_load.write(false);
 					// Write outputs
 					out_data_low.write(a0_register_out.read());
 					out_data_high.write(a1_out_register_out.read());
