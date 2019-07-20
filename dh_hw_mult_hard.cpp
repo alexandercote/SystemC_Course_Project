@@ -27,16 +27,10 @@ void dh_hw_mult::process_hw_mult()
 						c_register_load.write(true);
 						
 						// Re-init the control signals to all low.
-						t_register_load.write(false);
-						u_register_load.write(false);
 						a0_register_load.write(false);
 						a1_register_load.write(false);
 						a1_out_register_load.write(false);
 						
-						a0_multiplexer_cont.write(false);
-						a1_multiplexer_cont.write(false); 
-						t_multiplexer_cont.write(false); 
-						u_multiplexer_cont.write(false); 
 						
 						// clear output signals
 						out_data_low.write(0);
@@ -54,9 +48,7 @@ void dh_hw_mult::process_hw_mult()
 					b_register_load.write(false);
 					c_register_load.write(false);
 					
-					// Load in the new multiplication data.
-					t_register_load.write(true);
-					u_register_load.write(true);
+					// Load in the new multiplication and adder data.
 					a0_register_load.write(true);
 					a1_register_load.write(true);
 					
@@ -70,61 +62,15 @@ void dh_hw_mult::process_hw_mult()
 					cout << " bHigh = " << bsplitter_bhigh.read() << ", bLow = " << bsplitter_blow.read() << endl;
 					cout << " cHigh = " << csplitter_chigh.read() << ", cLow = " << csplitter_clow.read() << endl;
 					// Deassert Reg Values
-					// Note: t is still high to do the t += u calculation for the if statement and store it.
-					u_register_load.write(false);
 					a0_register_load.write(false);
 					a1_register_load.write(false);
-					
-					a1_multiplexer_cont.write(true);
-					t_multiplexer_cont.write(true); 
-					u_multiplexer_cont.write(true);
-					
-					state = ES_STAGE_3;
-					
-					break;
-				
-				case ES_STAGE_3:
-					cout << "process_hw_mult: ES_STAGE_3" << endl;
-					cout << " a[0] = " << a0_register_out.read() << ", a[1] = " << a1_register_out.read() << endl;
-					cout << " t = " << t_register_out.read() << ", u = " << u_register_out.read() << endl;
-					t_register_load.write(false);
-	
-					u_register_load.write(true);
-					a1_register_load.write(true);
-					
-					a0_multiplexer_cont.write(true);
-
-					state = ES_STAGE_4;
-					
-					break;
-					
-				case ES_STAGE_4:
-					cout << "process_hw_mult: ES_STAGE_4" << endl;
-					cout << "After if_1" << endl;
-					cout << " a[0] = " << a0_register_out.read() << ", a[1] = " << a1_register_out.read() << endl;
-					cout << " t = " << t_register_out.read() << ", u = " << u_register_out.read() << endl;
-					//cout << "U_in1 = " << t_got_highhalf << ", U_in2 = " << u_multiplier_out << ", u_cont = " << u_multiplexer_cont << endl; 
-
-					u_register_load.write(false);
-					a1_register_load.write(false);
-					a0_register_load.write(true);
-					
-					state = ES_STAGE_5;
-					
-					break;
-				
-				case ES_STAGE_5:
-					cout << "process_hw_mult: ES_STAGE_5" << endl;
-					cout << " a[0] = " << a0_register_out.read() << ", a[1] = " << a1_register_out.read() << endl;
-					cout << " t = " << t_register_out.read() << ", u = " << u_register_out.read() << endl;
-					
-					a0_register_load.write(false);
 					a1_out_register_load.write(true);
-					//wait();
-					//a1_out_register_load.write(false);
-				
+					
 					state = OUTPUT_STATE;
+					
 					break;
+				
+
 					
 				case OUTPUT_STATE:
 				        cout << "process_hw_mult: OUTPUT_STATE" << endl;
