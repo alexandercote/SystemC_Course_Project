@@ -53,8 +53,6 @@ void dh_hw_mult::process_hw_mult()
 					state = OUTPUT_STATE;
 					break;
 				
-
-					
 				case OUTPUT_STATE:
 					// Write outputs
 					out_data_low.write(a0_register_out.read());
@@ -63,7 +61,6 @@ void dh_hw_mult::process_hw_mult()
 					hw_mult_done.write(true); // assert multiplication is done
 					state = FINISH_STATE;
 					break;
-					
 					
 				case FINISH_STATE:
 					if(hw_mult_enable.read() == false)

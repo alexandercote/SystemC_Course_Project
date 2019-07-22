@@ -22,8 +22,8 @@ SC_MODULE (dh_hw_mult)
 	sc_in<bool> hw_mult_enable; 
 	sc_in_clk hw_clock;
 	
-	sc_in<NN_DIGIT> in_data_1;
-	sc_in<NN_DIGIT> in_data_2;
+	sc_in<NN_DIGIT>  in_data_1;
+	sc_in<NN_DIGIT>  in_data_2;
 	sc_out<NN_DIGIT> out_data_low;
 	sc_out<NN_DIGIT> out_data_high;
 	
@@ -88,11 +88,11 @@ SC_MODULE (dh_hw_mult)
 	
 	
 	//T offsets
-	highhalf t_highhalf_module;
+	highhalf   t_highhalf_module;
 	tohighhalf t_tohighhalf_module;
 
 	//Registers
-	async_reg b_register, c_register, a0_register, a1_register;
+	sync_reg b_register, c_register, a0_register, a1_register;
 	
 	// Splitters
 	splitter_32bit bsplitter, csplitter;
