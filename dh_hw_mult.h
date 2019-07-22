@@ -63,17 +63,15 @@ SC_MODULE (dh_hw_mult)
 	
 	sc_signal <NN_DIGIT> a0_register_in;
 	sc_signal <NN_DIGIT> a1_register_in;
-	sc_signal <NN_DIGIT> a1_out_register_in;
 	
-
+	sc_signal <NN_DIGIT> a1_out;
 	
 	sc_signal <NN_DIGIT> a0_register_out;
 	sc_signal <NN_DIGIT> a1_register_out;
-	sc_signal <NN_DIGIT> a1_out_register_out;
 
 	
 	// adder output sigs
-	//sc_signal <NN_DIGIT> t_u_adder_out;      
+	sc_signal <NN_DIGIT> t_u_adder_out;      
 	sc_signal <NN_DIGIT> a1_offset_adder_out;
 	sc_signal <NN_DIGIT> a0_u_adder_out;    
 	sc_signal <NN_DIGIT> a1_offset_2_adder_out;
@@ -95,7 +93,7 @@ SC_MODULE (dh_hw_mult)
 	tohighhalf t_tohighhalf_module;
 
 	//Registers
-	async_reg b_register, c_register, t_register, u_register, a0_register, a1_register, a1_out_register;
+	async_reg b_register, c_register, a0_register, a1_register;
 	
 	// Splitters
 	splitter_32bit bsplitter, csplitter;
@@ -111,9 +109,10 @@ SC_MODULE (dh_hw_mult)
 	
 	// Comparators (Only care about less than.
 	LT_comparator comparator_if_1, comparator_if_2;
+	
   
 	SC_CTOR (dh_hw_mult): 	t_highhalf_module(""), t_tohighhalf_module(""),
-							b_register(""), c_register(""), a0_register(""), a1_register(""), a1_out_register(""),
+							b_register(""), c_register(""), a0_register(""), a1_register(""),
 							bsplitter(""), csplitter(""),
 							a0_multiplier(""), a1_multiplier(""), t_multiplier(""), u_multiplier(""),
 							a1_if_multiplexer(""), a1_out_multiplexer(""),
@@ -144,7 +143,6 @@ SC_MODULE (dh_hw_mult)
 	    c_register.clock(hw_clock);        c_register.input(in_data_2);                 c_register.load(c_register_load);              c_register.output(creg_to_csplitter);
 	    a0_register.clock(hw_clock);       a0_register.input(a0_register_in);           a0_register.load(a0_register_load);            a0_register.output(a0_register_out);
 	    a1_register.clock(hw_clock);       a1_register.input(a1_register_in);           a1_register.load(a1_register_load);            a1_register.output(a1_register_out);
-	    a1_out_register.clock(hw_clock);   a1_out_register.input(a1_out_register_in);   a1_out_register.load(a1_out_register_load);    a1_out_register.output(a1_out_register_out);
 	    
 	    // Splitters
 	    bsplitter.input(breg_to_bsplitter);   bsplitter.highoutput(bsplitter_bhigh);   bsplitter.lowoutput(bsplitter_blow);
@@ -158,7 +156,7 @@ SC_MODULE (dh_hw_mult)
 	    
 	    // Multiplexers
 	    a1_if_multiplexer.input1(a1_offset_adder_out);     a1_if_multiplexer.input2(a1_register_out);          a1_if_multiplexer.control(LT_if_1);    a1_if_multiplexer.output(a1_if_multiplexer_out);
-	    a1_out_multiplexer.input1(a1_offset_2_adder_out);  a1_out_multiplexer.input2(a1_if_multiplexer_out);   a1_out_multiplexer.control(LT_if_2);   a1_out_multiplexer.output(a1_out_register_in);
+	    a1_out_multiplexer.input1(a1_offset_2_adder_out);  a1_out_multiplexer.input2(a1_if_multiplexer_out);   a1_out_multiplexer.control(LT_if_2);   a1_out_multiplexer.output(a1_out);
 	
 	    // Adders
 	    t_u_adder.input1(u_multiplier_out);        t_u_adder.input2(t_multiplier_out);                 t_u_adder.output(t_u_adder_out);        

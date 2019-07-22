@@ -13,6 +13,7 @@ void dh_hw_mult::process_hw_mult()
 		
 	    state = WAIT_STATE;
 	    hw_mult_done.write(0);
+	    int counter = 0;
 	    
 		while(true){
 		  
@@ -78,7 +79,7 @@ void dh_hw_mult::process_hw_mult()
 					a1_out_register_load.write(false);
 					// Write outputs
 					out_data_low.write(a0_register_out.read());
-					out_data_high.write(a1_out_register_out.read());
+					out_data_high.write(a1_out.read());
 					//wait();
 					hw_mult_done.write(true); // assert multiplication is done
 					state = FINISH_STATE;
@@ -86,15 +87,23 @@ void dh_hw_mult::process_hw_mult()
 					
 					
 				case FINISH_STATE:
-				        cout << "process_hw_mult: FINISH_STATE" << endl;
-					cout << " a[0] = " << a0_register_out.read() << ", a[1] = " << a1_out_register_out.read() << endl;
-					cout << "out_data_low = " << out_data_low.read() << ", out_data_high = " << out_data_high.read() << endl;
+				        //cout << "process_hw_mult: FINISH_STATE" << endl;
+					//cout << " a[0] = " << a0_register_out.read() << ", a[1] = " << a1_out_register_out.read() << endl;
+					//cout << "out_data_low = " << out_data_low.read() << ", out_data_high = " << out_data_high.read() << endl;
 					if(hw_mult_enable.read() == false)
 					{
 						hw_mult_done.write(false);
 						state = WAIT_STATE;
 						
 					}
+					
+					counter++;
+					if((counter % 10) == 0)
+					{
+					    cout << "Counter = " << counter << endl;
+					    sc_stop();
+					}
+					
 					break;
 				
 			

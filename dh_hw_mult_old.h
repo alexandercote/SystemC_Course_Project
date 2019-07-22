@@ -35,6 +35,7 @@ SC_MODULE (dh_hw_mult)
 		
 	    state = WAIT_STATE;
 	    hw_mult_done.write(0);
+	    int counter = 0;
 	    
 		while(true){
 			switch(state)
@@ -108,7 +109,13 @@ SC_MODULE (dh_hw_mult)
 						state = WAIT_STATE;
 						
 					}
-					//wait();
+					
+					counter++;
+					if((counter % 10) == 0)
+					{
+					    cout << "Counter = " << counter << endl;
+					}
+					
 					break;
 				
 			
