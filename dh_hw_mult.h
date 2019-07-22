@@ -40,7 +40,6 @@ SC_MODULE (dh_hw_mult)
 	sc_signal <bool> c_register_load;
 	sc_signal <bool> a0_register_load;
 	sc_signal <bool> a1_register_load;
-	sc_signal <bool> a1_out_register_load;
 	
 	sc_signal <bool> LT_if_1;
 	sc_signal <bool> LT_if_2;
@@ -131,11 +130,10 @@ SC_MODULE (dh_hw_mult)
 		c_register_load.write(false);
 		a0_register_load.write(false);
 		a1_register_load.write(false);
-		a1_out_register_load.write(false);
 		
 	    
 	    // T offsets
-	    t_highhalf_module.input(t_u_adder_out);    t_highhalf_module.output(t_highhalf_part);
+	    t_highhalf_module.input(t_u_adder_out);      t_highhalf_module.output(t_highhalf_part);
 	    t_tohighhalf_module.input(t_u_adder_out);    t_tohighhalf_module.output(t_to_highhalf);
 	    
 	    // Registers
@@ -166,7 +164,7 @@ SC_MODULE (dh_hw_mult)
 	    a1_hht_adder.input1(a1_multiplier_out);    a1_hht_adder.input2(t_highhalf_part);               a1_hht_adder.output(a1_register_in);                        // Not actually t, but highhalf t
 	
 	    // Comparators
-	    comparator_if_1.input1(t_u_adder_out);    comparator_if_1.input2(u_multiplier_out);   comparator_if_1.LT(LT_if_1);
+	    comparator_if_1.input1(t_u_adder_out);     comparator_if_1.input2(u_multiplier_out);   comparator_if_1.LT(LT_if_1);
 	    comparator_if_2.input1(a0_register_out);   comparator_if_2.input2(t_to_highhalf);   comparator_if_2.LT(LT_if_2);
 	    
 	}
