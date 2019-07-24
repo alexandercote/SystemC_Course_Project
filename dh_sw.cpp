@@ -380,7 +380,16 @@ NN_DIGIT c
     a[1] = in_data_high.read();
     //cout << "NN_DigitMult: Data: A0 = " << a[0] << ", A1 = " << a[1] << endl;
     hw_mult_enable.write(false);
-    wait();
+    
+    while(true)
+    {
+        if (hw_mult_done.read() == false)
+	{
+	   break;
+	}
+	wait();
+    }; // loop until hardware replies
+    
 }
 
 
