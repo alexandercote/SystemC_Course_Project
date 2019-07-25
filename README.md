@@ -75,5 +75,120 @@ The first iteration of NN_DigitMult running without the hardware implementation 
 	 a[0] = 2147483648, a[1] = 0
 	 t = 32768, u = 2147483648
 
+Ten iterations provides the following results: 
+a[0] = 2147483648, a[1] = 0
+a[0] = 2147483648, a[1] = 554094031
+a[0] = 2147483648, a[1] = 573719873
+a[0] = 0, a[1] = 573719874
+a[0] = 3758096384, a[1] = 286859936
+a[0] = 0, a[1] = 286859937
+a[0] = 0, a[1] = 143429968
+a[0] = 4, a[1] = 0
+a[0] = 8, a[1] = 0
+a[0] = 1, a[1] = 0
+
+## Improved hardware implementation
+The improved FSM (v2) provides the following data within the blink of an eye (Extremely fast)
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 1, c_reg = 2147483648
+ bHigh = 0, bLow = 1
+ cHigh = 32768, cLow = 0
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 2147483648, A1 = 0
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 1108188063, c_reg = 2147483648
+ bHigh = 16909, bLow = 39839
+ cHigh = 32768, cLow = 0
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 2147483648, A1 = 554094031
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 1147439747, c_reg = 2147483648
+ bHigh = 17508, bLow = 35459
+ cHigh = 32768, cLow = 0
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 2147483648, A1 = 573719873
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 764959832, c_reg = 3221225472
+ bHigh = 11672, bLow = 23640
+ cHigh = 49152, cLow = 0
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 0, A1 = 573719874
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 458975899, c_reg = 2684354560
+ bHigh = 7003, bLow = 27291
+ cHigh = 40960, cLow = 0
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 3758096384, A1 = 286859936
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 327839928, c_reg = 3758096384
+ bHigh = 5002, bLow = 28856
+ cHigh = 57344, cLow = 0
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 0, A1 = 286859937
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 208625408, c_reg = 2952790016
+ bHigh = 3183, bLow = 24320
+ cHigh = 45056, cLow = 0
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 0, A1 = 143429968
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 2, c_reg = 2
+ bHigh = 0, bLow = 2
+ cHigh = 0, cLow = 2
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 4, A1 = 0
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 4, c_reg = 2
+ bHigh = 0, bLow = 4
+ cHigh = 0, cLow = 2
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 8, A1 = 0
+
+process_hw_mult: ES_STAGE_1
+process_hw_mult: ES_STAGE_2
+Data: b_reg = 1, c_reg = 1
+ bHigh = 0, bLow = 1
+ cHigh = 0, cLow = 1
+process_hw_mult: OUTPUT_STATE
+NN_DigitMult: Data: A0 = 1, A1 = 0
+Counter = 10
+
+These results match the non-hardware implementation.
+
+The results of the full run are as follows:
+4.6 seconds for full simulation (vs. 10 seconds for two multiplications with old FSM)
+
+Counter = 757000
+*** Agreed Key:  09 2a f1 41 e2 93 61 d5 
+
+Counter = 1500000
+*** Agreed Key:  64 30 94 c5 da d2 f6 da 49 6d 67 f1 16 55 b3 ea ee a2 c0 30 2b b5 4f 05 9e a4 58 ac 97 3b b9 a0 25 b7 56 fe 82 73 bb 22 d4 31 36 60 7f 41 e9 47 97 b9 5e 27 99 3e 73 f0 28 da b5 25 da e4 61 84 
+
+This matches the golden reference, showing the hardware works successfully. 
+
+
+
+
+
+
+
 
 

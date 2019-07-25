@@ -18,11 +18,10 @@ SC_MODULE(splitter_32bit)
         SC_METHOD(split);
         sensitive << input;
     }
-
 };
 
 
-SC_MODULE(async_reg)
+SC_MODULE(sync_reg)
 {
 	sc_in_clk         clock;
 	sc_in  <NN_DIGIT> input;
@@ -41,7 +40,7 @@ SC_MODULE(async_reg)
 		}
 	}
 	
-	SC_CTOR (async_reg)
+	SC_CTOR (sync_reg)
 	{
 		SC_CTHREAD(reg_update, clock.pos());
 	}
@@ -63,7 +62,6 @@ SC_MODULE(two_in_adder)
         SC_METHOD(add);
         sensitive << input1 << input2;
     }
-
 };
 
 
@@ -82,7 +80,6 @@ SC_MODULE(two_in_multiplier)
         SC_METHOD(multiply);
         sensitive << input1 << input2;
     }
-
 };
 
 
@@ -94,23 +91,14 @@ SC_MODULE(two_in_multiplexer)
 
     void multiplex()
     {
-        //output.write( (input1.read() & control.read()) | (input2.read() & ~control.read()) );
-	if(control.read() == true)
-	{
-	  output.write(input1.read());
-	}
-	else 
-	{
-	  output.write(input2.read());
-	}
+	if(control.read() == true) output.write(input1.read());
+	else                       output.write(input2.read());
     }
-
     SC_CTOR (two_in_multiplexer)
     {
         SC_METHOD(multiplex);
         sensitive << input1 << input2 << control;
     }
-
 };
 
 
@@ -121,15 +109,8 @@ SC_MODULE(LT_comparator)
 	
 	void compare()
 	{
-		//LT.write(false);
-		if (input1.read() <  input2.read()) 
-		{
-		  LT.write(true);
-		}
-		else
-		{
-		  LT.write(false);
-		}
+		if (input1.read() <  input2.read()) LT.write(true);
+		else                                LT.write(false);
 	}
 	
 	SC_CTOR (LT_comparator)
@@ -170,11 +151,10 @@ SC_MODULE(highhalf)
 	}
 	
 	SC_CTOR (highhalf)
-    {
-        SC_METHOD(highhalf_func);
-        sensitive << input;
-    }
-	
+	{
+	    SC_METHOD(highhalf_func);
+	    sensitive << input;
+	}
 };
 
 
